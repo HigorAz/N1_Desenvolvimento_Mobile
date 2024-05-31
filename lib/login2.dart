@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 class Login2Page extends StatelessWidget {
-  const Login2Page({Key? key});
+  const Login2Page({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -80,7 +80,6 @@ class Login2Page extends StatelessWidget {
     );
   }
 
-
   Widget _buildEstacionamento(Size size) {
     return Container(
       alignment: Alignment.center,
@@ -117,14 +116,13 @@ class Login2Page extends StatelessWidget {
     );
   }
 
-
   Widget _buildEmailInput(ThemeData theme) {
     return TextFormField(
       decoration: InputDecoration(
         labelText: 'E-mail / CPF / CNPJ',
-        labelStyle: theme.textTheme.bodyText1!.copyWith(
-          color: Colors.grey, // Cor do texto cinza
-          fontSize: 15, // Tamanho do texto
+        labelStyle: theme.textTheme.bodyMedium!.copyWith(
+          color: Colors.grey,
+          fontSize: 15,
         ),
         border: InputBorder.none,
       ),
@@ -136,17 +134,14 @@ class Login2Page extends StatelessWidget {
       obscureText: true,
       decoration: InputDecoration(
         labelText: 'Senha',
-        labelStyle: theme.textTheme.bodyText1!.copyWith(
-          color: Colors.grey, // Cor do texto cinza
-          fontSize: 15, // Tamanho do texto
+        labelStyle: theme.textTheme.bodyMedium!.copyWith(
+          color: Colors.grey,
+          fontSize: 15,
         ),
         border: InputBorder.none,
       ),
     );
   }
-
-
-
 
   Widget _buildLoginButton(Size size, ThemeData theme, BuildContext context) {
     return SizedBox(
@@ -158,7 +153,7 @@ class Login2Page extends StatelessWidget {
         style: ElevatedButton.styleFrom(
           backgroundColor: const Color(0xFFfbae16),
           padding: const EdgeInsets.symmetric(vertical: 16),
-          textStyle: theme.textTheme.button!.copyWith(
+          textStyle: theme.textTheme.labelLarge!.copyWith(
             color: Colors.white,
             fontSize: 18,
           ),
@@ -170,11 +165,11 @@ class Login2Page extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
             SizedBox(width: 15),
-            Icon(Icons.vpn_key_outlined, color: Colors.white), // Ícone de chave com cor branca
-            SizedBox(width: 30), // Espaço entre o ícone e o texto
+            Icon(Icons.vpn_key_outlined, color: Colors.white),
+            SizedBox(width: 30),
             Text(
               'Entrar com Usuário e Senha',
-              style: TextStyle(color: Colors.white), // Cor branca para o texto
+              style: TextStyle(color: Colors.white),
             ),
           ],
         ),
@@ -214,7 +209,7 @@ class Login2Page extends StatelessWidget {
                 ),
                 label: const Text(
                   'Iniciar sessão com a Apple',
-                  style: TextStyle(fontSize: 16, color: Colors.white), // Alterando a cor do texto para branco
+                  style: TextStyle(fontSize: 16, color: Colors.white),
                 ),
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.black,
@@ -244,10 +239,6 @@ class Login2Page extends StatelessWidget {
                 style: ElevatedButton.styleFrom(
                   backgroundColor: const Color(0xFF475a96),
                   padding: const EdgeInsets.symmetric(vertical: 14),
-                  textStyle: theme.textTheme.button!.copyWith(
-                    color: Colors.black,
-                    fontSize: 16,
-                  ),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(5),
                   ),
@@ -271,7 +262,7 @@ class Login2Page extends StatelessWidget {
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.white,
                 padding: const EdgeInsets.symmetric(vertical: 14),
-                textStyle: theme.textTheme.button!.copyWith(
+                textStyle: theme.textTheme.labelLarge!.copyWith(
                   color: Colors.black,
                   fontSize: 16,
                 ),

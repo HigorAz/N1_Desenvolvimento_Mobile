@@ -9,41 +9,33 @@ class ParkPage extends StatefulWidget {
 }
 
 class _ParkPageState extends State<ParkPage> {
-  // Variáveis para armazenar as seleções do usuário
   String selectedCity = 'Cidade';
   String selectedVehicle = 'ONIX';
   String selectedVehicleType = 'Carro';
   int selectedTime = 30;
   String? parkingSpot;
 
-  // Lista de cidades para a caixa de seleção
   final List<String> cities = ['Jaraguá do Sul', 'Blumenau', 'Uruguaiana'];
-
-  // Lista de modelos de carros
   final List<String> vehiclesModels = ['ONIX', 'MAREA', 'FIAT UNO'];
 
-  // Função para atualizar o estado quando a cidade é selecionada
   void onCitySelected(String city) {
     setState(() {
       selectedCity = city;
     });
   }
 
-  // Função para atualizar o estado quando o tipo de veículo é selecionado
   void onVehicleTypeSelected(String type) {
     setState(() {
       selectedVehicleType = type;
     });
   }
 
-  // Função para atualizar o estado quando o veículo é selecionado
   void onVehicleSelected(String vehicle) {
     setState(() {
       selectedVehicle = vehicle;
     });
   }
 
-  // Função para atualizar o estado quando o tempo é selecionado
   void onTimeSelected(int time) {
     setState(() {
       selectedTime = time;
@@ -51,7 +43,6 @@ class _ParkPageState extends State<ParkPage> {
   }
 
   void startParking() {
-    // Validar as entradas do usuário
     if (selectedCity == 'Cidade') {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Selecione uma cidade')),
@@ -122,13 +113,11 @@ class _ParkPageState extends State<ParkPage> {
             icon: const Icon(Icons.arrow_back),
             color: Colors.white,
           ),
-          Center( // Centro do texto "Estacionar"
-            child: Text(
-              'Estacionar',
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: size.width * 0.04,
-              ),
+          Text(
+            'Estacionar',
+            style: TextStyle(
+              color: Colors.white,
+              fontSize: size.width * 0.04,
             ),
           ),
           SizedBox(width: 48.0),
@@ -141,36 +130,26 @@ class _ParkPageState extends State<ParkPage> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          'Cidade:',
-          style: TextStyle(
-            color: const Color(0xFFfbae16),
-            fontSize: size.width * 0.04,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
+        _buildSectionLabel('Cidade:', size),
         _buildCityDropdown(size, theme),
         SizedBox(height: size.height * 0.01),
-        Text(
-          'Veículo:',
-          style: TextStyle(
-            color: const Color(0xFFfbae16),
-            fontSize: size.width * 0.04,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
+        _buildSectionLabel('Veículo:', size),
         _buildVehicleDropdown(size, theme),
         SizedBox(height: size.height * 0.01),
-        Text(
-          'Tipo de Veículo:',
-          style: TextStyle(
-            color: const Color(0xFFfbae16),
-            fontSize: size.width * 0.04,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
+        _buildSectionLabel('Tipo de Veículo:', size),
         _buildVehicleTypeButtons(size, theme),
       ],
+    );
+  }
+
+  Widget _buildSectionLabel(String text, Size size) {
+    return Text(
+      text,
+      style: TextStyle(
+        color: const Color(0xFFfbae16),
+        fontSize: size.width * 0.04,
+        fontWeight: FontWeight.bold,
+      ),
     );
   }
 
@@ -190,16 +169,8 @@ class _ParkPageState extends State<ParkPage> {
           onCitySelected(newValue);
         }
       },
-      decoration: InputDecoration(
-        filled: true,
-        fillColor: Colors.white,
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(5),
-          borderSide: BorderSide.none,
-        ),
-        suffixIcon: const Icon(Icons.map_outlined, color: Color(0xFFfbae16)),
-      ),
-      style: theme.textTheme.bodyText1!.copyWith(color: Colors.black),
+      decoration: _buildInputDecoration(),
+      style: theme.textTheme.bodyMedium!.copyWith(color: Colors.black),
     );
   }
 
@@ -221,53 +192,55 @@ class _ParkPageState extends State<ParkPage> {
           onVehicleSelected(newValue);
         }
       },
-      decoration: InputDecoration(
-        filled: true,
-        fillColor: Colors.white,
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(5),
-          borderSide: BorderSide.none,
-        ),
+      decoration: _buildInputDecoration(),
+      style: theme.textTheme.bodyMedium!.copyWith(color: Colors.black),
+    );
+  }
+
+  InputDecoration _buildInputDecoration() {
+    return InputDecoration(
+      filled: true,
+      fillColor: Colors.white,
+      border: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(5),
+        borderSide: BorderSide.none,
       ),
-      style: theme.textTheme.bodyText1!.copyWith(color: Colors.black),
+      suffixIcon: const Icon(Icons.map_outlined, color: Color(0xFFfbae16)),
     );
   }
 
   Widget _buildVehicleTypeButtons(Size size, ThemeData theme) {
     return Row(
       children: [
-        Expanded(
-          child: ElevatedButton(
-            onPressed: () => onVehicleTypeSelected('Carro'),
-            style: ElevatedButton.styleFrom(
-              backgroundColor: selectedVehicleType == 'Carro' ? const Color(0xFFfbae16) : Color(0xff8b8b8b),
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(0)),
-            ),
-            child: Column(
-              children: [
-                Icon(Icons.directions_car, color: Colors.white, size: 35),
-                Text('CARRO', style: TextStyle(color: selectedVehicleType == 'Carro' ? Colors.white : Colors.black)),
-              ],
-            ),
-          ),
-        ),
+        _buildVehicleTypeButton('Carro', Icons.directions_car, size),
         SizedBox(width: size.width * 0.005),
-        Expanded(
-          child: ElevatedButton(
-            onPressed: () => onVehicleTypeSelected('Moto'),
-            style: ElevatedButton.styleFrom(
-              backgroundColor: selectedVehicleType == 'Moto' ? const Color(0xFFfbae16) : Color(0xff8b8b8b),
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(0)),
-            ),
-            child: Column(
-              children: [
-                Icon(Icons.motorcycle, color: Colors.white,size: 35),
-                Text('MOTO', style: TextStyle(color: selectedVehicleType == 'Moto' ? Colors.white : Colors.black)),
-              ],
-            ),
-          ),
-        ),
+        _buildVehicleTypeButton('Moto', Icons.motorcycle, size),
       ],
+    );
+  }
+
+  Widget _buildVehicleTypeButton(String type, IconData icon, Size size) {
+    bool isSelected = selectedVehicleType == type;
+
+    return Expanded(
+      child: ElevatedButton(
+        onPressed: () => onVehicleTypeSelected(type),
+        style: ElevatedButton.styleFrom(
+          backgroundColor: isSelected ? const Color(0xFFfbae16) : Color(0xff8b8b8b),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(0)),
+        ),
+        child: Column(
+          children: [
+            Icon(icon, color: Colors.white, size: 35),
+            Text(
+              type.toUpperCase(),
+              style: TextStyle(
+                color: isSelected ? Colors.white : Colors.black,
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 
@@ -275,14 +248,7 @@ class _ParkPageState extends State<ParkPage> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          'Tempo (em minutos):',
-          style: TextStyle(
-            color: const Color(0xFFfbae16),
-            fontSize: size.width * 0.04,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
+        _buildSectionLabel('Tempo (em minutos):', size),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
@@ -293,33 +259,7 @@ class _ParkPageState extends State<ParkPage> {
           ],
         ),
         SizedBox(height: size.height * 0.02),
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              'Vaga (opcional):',
-              style: TextStyle(
-                color: const Color(0xFFfbae16),
-                fontSize: size.width * 0.04,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            TextField(
-              keyboardType: TextInputType.number,
-              inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-              decoration: InputDecoration(
-                filled: true,
-                fillColor: Colors.white,
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(10),
-                  borderSide: BorderSide.none, // Remover a borda
-                ),
-                hintText: 'Digite o número da vaga',
-              ),
-              onChanged: (value) => parkingSpot = value,
-            ),
-          ],
-        ),
+        _buildParkingSpotInput(size, theme),
       ],
     );
   }
@@ -358,6 +298,29 @@ class _ParkPageState extends State<ParkPage> {
     );
   }
 
+  Widget _buildParkingSpotInput(Size size, ThemeData theme) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        _buildSectionLabel('Vaga (opcional):', size),
+        TextField(
+          keyboardType: TextInputType.number,
+          inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+          decoration: InputDecoration(
+            filled: true,
+            fillColor: Colors.white,
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(10),
+              borderSide: BorderSide.none,
+            ),
+            hintText: 'Digite o número da vaga',
+          ),
+          onChanged: (value) => parkingSpot = value,
+        ),
+      ],
+    );
+  }
+
   Widget _buildActionButton(Size size, ThemeData theme) {
     return Container(
       width: size.width,
@@ -380,11 +343,12 @@ class _ParkPageState extends State<ParkPage> {
       ),
     );
   }
+
   Widget _buildMenu(BuildContext context) {
-    final iconSize = MediaQuery.of(context).size.width * 0.09; // Calcula o tamanho do ícone proporcional à largura da tela
+    final iconSize = MediaQuery.of(context).size.width * 0.09;
 
     return Container(
-      width: MediaQuery.of(context).size.width * 0.9, // Define a largura do menu proporcional à largura da tela
+      width: MediaQuery.of(context).size.width * 0.9,
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(10),
@@ -396,7 +360,7 @@ class _ParkPageState extends State<ParkPage> {
           _buildMenuItem(context, Icons.account_balance_wallet, 'Carteira', '/carteira', iconSize),
           _buildMenuItem(context, Icons.menu, 'Menu', '/login2', iconSize),
           _buildMenuItem(context, Icons.local_parking, 'Estacionar', '/park', iconSize),
-          _buildMenuItem(context, Icons.toll, 'Pedágio', '/pedagio', iconSize),
+          _buildMenuItem(context, Icons.toll, 'Veículos', '/veiculos', iconSize),
         ],
       ),
     );
@@ -410,11 +374,11 @@ class _ParkPageState extends State<ParkPage> {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(icon, color: Colors.grey, size: iconSize), // Define o tamanho do ícone
+          Icon(icon, color: Colors.grey, size: iconSize),
           SizedBox(height: 4),
           Text(
             text,
-            style: TextStyle(fontSize: iconSize * 0.4), // Define o tamanho do texto proporcional ao tamanho do ícone
+            style: TextStyle(fontSize: iconSize * 0.4),
           ),
         ],
       ),

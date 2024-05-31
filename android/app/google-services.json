@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "808839366416",
+    "project_id": "rekpay-13ef2",
+    "storage_bucket": "rekpay-13ef2.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:808839366416:android:84b7934d102ffe92fd4795",
+        "android_client_info": {
+          "package_name": "com.example.n1_rekpay"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBlHgjt0fAp_3Qlpcuey3sjf6Gr3JKyhtg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
