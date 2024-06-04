@@ -153,7 +153,6 @@ class LoginPage extends StatelessWidget {
                   ),
                   SizedBox(height: screenHeight * 0.25),
 
-                  // Botão ENTRAR
                   ElevatedButton(
                     onPressed: () {
                       Navigator.pushNamed(context, '/login2');
@@ -175,9 +174,10 @@ class LoginPage extends StatelessWidget {
 
                   SizedBox(height: screenHeight * 0.01),
 
-                  // Botão CADASTRAR
                   ElevatedButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      Navigator.pushNamed(context, '/cadastro');
+                    },
                     style: ElevatedButton.styleFrom(
                       foregroundColor: Colors.white,
                       backgroundColor: Colors.transparent, // Cor do texto

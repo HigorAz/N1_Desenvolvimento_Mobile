@@ -7,7 +7,7 @@ import 'login.dart';
 import 'login2.dart';
 import 'home.dart';
 import 'veiculos.dart';
-import 'editarVeiculo.dart';
+import 'cadastro.dart';
 
 Future<void> main() async{
 
@@ -32,6 +32,7 @@ class MyApp extends StatelessWidget {
         '/home': (context) => HomePage(),
         '/park': (context) => ParkPage(),
         '/veiculos': (context) => VeiculosPage(),
+        '/cadastro': (context) => CadastroPage(),
       },
       debugShowCheckedModeBanner: false,
     );

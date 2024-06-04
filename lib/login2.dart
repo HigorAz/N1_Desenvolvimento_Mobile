@@ -1,8 +1,45 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'authenticator.dart';
 
-class Login2Page extends StatelessWidget {
+class Login2Page extends StatefulWidget {
   const Login2Page({Key? key}) : super(key: key);
+
+  @override
+  _Login2PageState createState() => _Login2PageState();
+}
+
+class _Login2PageState extends State<Login2Page> {
+  final _emailController = TextEditingController();
+  final _passwordController = TextEditingController();
+  final _authenticator = Authenticator();
+  final _formKey = GlobalKey<FormState>();
+
+  String? _errorMessage;
+
+  @override
+  void dispose() {
+    _emailController.dispose();
+    _passwordController.dispose();
+    super.dispose();
+  }
+
+  void _login() async {
+    if (_formKey.currentState!.validate()) {
+      final email = _emailController.text;
+      final password = _passwordController.text;
+
+      final authenticated = await _authenticator.authenticate(email, password);
+
+      if (authenticated) {
+        Navigator.pushNamed(context, '/home');
+      } else {
+        setState(() {
+          _errorMessage = 'E-mail ou senha incorretos';
+        });
+      }
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -12,7 +49,7 @@ class Login2Page extends StatelessWidget {
     return AnnotatedRegion<SystemUiOverlayStyle>(
       value: SystemUiOverlayStyle.dark,
       child: Scaffold(
-        backgroundColor: Color(0xfff3f3f3),
+        backgroundColor: const Color(0xfff3f3f3),
         body: SafeArea(
           child: Stack(
             children: [
@@ -22,20 +59,30 @@ class Login2Page extends StatelessWidget {
                   horizontal: size.width * 0.08,
                   vertical: size.height * 0.1,
                 ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    _buildEstacionamento(size),
-                    const SizedBox(height: 40),
-                    _buildForm(size, theme),
-                    const SizedBox(height: 48),
-                    _buildLoginButton(size, theme, context),
-                    const SizedBox(height: 16),
-                    _buildForgotPasswordButton(theme),
-                    const SizedBox(height: 48),
-                    _buildSocialLoginButtons(size, theme),
-                    const SizedBox(height: 24),
-                  ],
+                child: Form(
+                  key: _formKey,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      _buildEstacionamento(size),
+                      const SizedBox(height: 40),
+                      _buildForm(size, theme),
+                      if (_errorMessage != null) ...[
+                        const SizedBox(height: 16),
+                        Text(
+                          _errorMessage!,
+                          style: const TextStyle(color: Colors.red, fontSize: 14),
+                        ),
+                      ],
+                      const SizedBox(height: 48),
+                      _buildLoginButton(size, theme),
+                      const SizedBox(height: 16),
+                      _buildForgotPasswordButton(theme),
+                      const SizedBox(height: 48),
+                      _buildSocialLoginButtons(size, theme),
+                      const SizedBox(height: 24),
+                    ],
+                  ),
                 ),
               ),
             ],
@@ -53,17 +100,13 @@ class Login2Page extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          GestureDetector(
-            onTap: () {
+          IconButton(
+            onPressed: () {
               Navigator.pop(context);
             },
-            child: Container(
-              padding: EdgeInsets.all(8.0),
-              alignment: Alignment.centerLeft,
-              child: const Icon(Icons.close_sharp, color: Colors.white),
-            ),
+            icon: const Icon(Icons.close_sharp, color: Colors.white),
           ),
-          Text(
+          const Text(
             'Entrar',
             style: TextStyle(
               color: Colors.white,
@@ -103,12 +146,12 @@ class Login2Page extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Padding(
-            padding: EdgeInsets.only(left: 16),
+            padding: const EdgeInsets.only(left: 16),
             child: _buildEmailInput(theme),
           ),
           const Divider(color: Colors.grey),
           Padding(
-            padding: EdgeInsets.only(left: 16),
+            padding: const EdgeInsets.only(left: 16),
             child: _buildPasswordInput(theme),
           ),
         ],
@@ -118,6 +161,7 @@ class Login2Page extends StatelessWidget {
 
   Widget _buildEmailInput(ThemeData theme) {
     return TextFormField(
+      controller: _emailController,
       decoration: InputDecoration(
         labelText: 'E-mail / CPF / CNPJ',
         labelStyle: theme.textTheme.bodyMedium!.copyWith(
@@ -126,11 +170,18 @@ class Login2Page extends StatelessWidget {
         ),
         border: InputBorder.none,
       ),
+      validator: (value) {
+        if (value == null || value.isEmpty) {
+          return 'Por favor, insira um e-mail';
+        }
+        return null;
+      },
     );
   }
 
   Widget _buildPasswordInput(ThemeData theme) {
     return TextFormField(
+      controller: _passwordController,
       obscureText: true,
       decoration: InputDecoration(
         labelText: 'Senha',
@@ -140,16 +191,20 @@ class Login2Page extends StatelessWidget {
         ),
         border: InputBorder.none,
       ),
+      validator: (value) {
+        if (value == null || value.isEmpty) {
+          return 'Por favor, insira uma senha';
+        }
+        return null;
+      },
     );
   }
 
-  Widget _buildLoginButton(Size size, ThemeData theme, BuildContext context) {
+  Widget _buildLoginButton(Size size, ThemeData theme) {
     return SizedBox(
       width: size.width,
       child: ElevatedButton(
-        onPressed: () {
-          Navigator.pushNamed(context, '/home');
-        },
+        onPressed: _login,
         style: ElevatedButton.styleFrom(
           backgroundColor: const Color(0xFFfbae16),
           padding: const EdgeInsets.symmetric(vertical: 16),
@@ -163,7 +218,7 @@ class Login2Page extends StatelessWidget {
         ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.start,
-          children: [
+          children: const [
             SizedBox(width: 15),
             Icon(Icons.vpn_key_outlined, color: Colors.white),
             SizedBox(width: 30),
@@ -180,10 +235,10 @@ class Login2Page extends StatelessWidget {
   Widget _buildForgotPasswordButton(ThemeData theme) {
     return TextButton(
       onPressed: () {},
-      child: Text(
+      child: const Text(
         'Esqueceu a sua senha?',
         style: TextStyle(
-          color: const Color(0xFFfbae16),
+          color: Color(0xFFfbae16),
           fontSize: 16,
           fontWeight: FontWeight.bold,
         ),
@@ -193,34 +248,34 @@ class Login2Page extends StatelessWidget {
 
   Widget _buildSocialLoginButtons(Size size, ThemeData theme) {
     return Center(
-      child: Column(
+        child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Padding(
-            padding: const EdgeInsets.only(bottom: 16),
-            child: SizedBox(
-              width: size.width * 0.8,
-              child: ElevatedButton.icon(
-                onPressed: () {},
-                icon: Image.asset(
-                  'assets/icons/apple_logo.png',
-                  width: 25,
-                  height: 25,
-                ),
-                label: const Text(
-                  'Iniciar sessão com a Apple',
-                  style: TextStyle(fontSize: 16, color: Colors.white),
-                ),
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.black,
-                  padding: const EdgeInsets.symmetric(vertical: 16),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(5),
-                  ),
-                ),
-              ),
-            ),
-          ),
+        Padding(
+        padding: const EdgeInsets.only(bottom: 16),
+    child: SizedBox(
+    width: size.width * 0.8,
+    child: ElevatedButton.icon(
+    onPressed: () {},
+    icon: Image.asset(
+    'assets/icons/apple_logo.png',
+    width: 25,
+    height: 25
+    ),
+      label: const Text(
+        'Iniciar sessão com a Apple',
+        style: TextStyle(fontSize: 16, color: Colors.white),
+      ),
+      style: ElevatedButton.styleFrom(
+        backgroundColor: Colors.black,
+        padding: const EdgeInsets.symmetric(vertical: 16),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(5),
+        ),
+      ),
+    ),
+    ),
+        ),
           Padding(
             padding: const EdgeInsets.only(bottom: 14),
             child: SizedBox(
@@ -273,7 +328,7 @@ class Login2Page extends StatelessWidget {
             ),
           ),
         ],
-      ),
+        ),
     );
   }
 }
